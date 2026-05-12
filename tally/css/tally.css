@@ -228,3 +228,8 @@ input[type="number"]:focus {
     50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; }
     100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; }
 }
+
+/* Pushes the app down so the Topbar doesn't cover it */
+.app-container {
+    margin-top: 80px; 
+}

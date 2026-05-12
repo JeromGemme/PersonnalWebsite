@@ -5,8 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Modern Tally Counter</title>
     <link rel="stylesheet" href="css/tally.css">
+    <link rel="stylesheet" href="css/topbar.css">
 </head>
 <body>
+    
+    <header class="futuristic-topbar tally-theme">
+        <a href="../index.html" class="topbar-brand">TALLY.</a>
+    
+        <div class="menu-container">
+            <button id="hamburger-btn" class="hamburger" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        
+            <nav id="dropdown-menu" class="dropdown">
+                <ul class="dropdown-list">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../LSRPQc/LSRPQc.html">LSRPQc Project</a></li>
+                    <li><a href="./tally.html" class="active-link">Tally Counter</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
     <div class="app-container">
         <!-- Maximum Limit -->
         <section class="panel">
@@ -64,5 +86,6 @@
     </div>
 
     <script src="js/tally.js"></script>
+    <script src="js/topbar.js"></script>
 </body>
 </html>

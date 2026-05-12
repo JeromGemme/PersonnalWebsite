@@ -1,42 +1,41 @@
-// --- LSRPQc TOP BAR & DROPDOWN LOGIC ---
-
 document.addEventListener("DOMContentLoaded", () => {
-    const topBar = document.getElementById("top-bar");
+    // Select the topbar using the class since we didn't give it an ID in the last tally.html
+    const topBar = document.querySelector(".futuristic-topbar");
     const hamburgerBtn = document.getElementById("hamburger-btn");
     const dropdownMenu = document.getElementById("dropdown-menu");
     
     let lastScrollTop = 0;
 
-    // 1. Toggle Menu on Click
-    if (hamburgerBtn && dropdownMenu) {
-        hamburgerBtn.addEventListener("click", (e) => {
-            e.stopPropagation(); // Prevents immediate closing
-            hamburgerBtn.classList.toggle("active");
-            dropdownMenu.classList.toggle("active");
-        });
-    }
-
-    // 2. Hide/Show Topbar on Scroll
     window.addEventListener("scroll", () => {
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         
-        if (scrollTop > lastScrollTop && scrollTop > 70) {
-            // Scrolling Down
+        // 1. Hide/Show logic
+        if (scrollTop > lastScrollTop && scrollTop > 80) {
+            // User is scrolling DOWN - Hide the bar
             topBar.style.top = "-80px"; 
-            // Auto-close menu when moving away
+            
+            // Also close the menu if it was open while scrolling down
             if (hamburgerBtn.classList.contains("active")) {
                 hamburgerBtn.classList.remove("active");
                 dropdownMenu.classList.remove("active");
             }
         } else {
-            // Scrolling Up
+            // User is scrolling UP - Show the bar
             topBar.style.top = "0";
         }
         
-        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        // Update position for next scroll event
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; 
     }, { passive: true });
 
-    // 3. Click Outside to Close
+    // 2. Keep the hamburger menu logic working
+    hamburgerBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        hamburgerBtn.classList.toggle("active");
+        dropdownMenu.classList.toggle("active");
+    });
+
+    // 3. Close menu if user clicks elsewhere
     document.addEventListener("click", (e) => {
         if (!topBar.contains(e.target)) {
             hamburgerBtn.classList.remove("active");

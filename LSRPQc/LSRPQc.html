@@ -14,24 +14,28 @@
 </head>
 <body>
 
-    <!-- 1 & 1.5 TOP BAR & Drop Down Menu -->
-    <header id="top-bar" class="top-bar">
-        <button id="dropdown-btn" class="dropdown-btn">
-            [ <i class="fa-solid fa-bars"></i> ]
-        </button>
-        <div class="logo">LSRPQc</div>
+    <header id="top-bar" class="futuristic-topbar">
+        <a href="../index.html" class="topbar-brand">LSRPQc</a>
         
-        <!-- Empty div to balance flexbox layout -->
-        <div class="spacer"></div> 
-        
-        <nav id="dropdown-menu" class="dropdown-menu">
-            <ul>
-                <li><a href="#">Accueil</a></li>
-                <li><a href="#">Règlement</a></li>
-                <li><a href="#">Boutique</a></li>
-                <li><a href="#">Nous Contacter</a></li>
-            </ul>
-        </nav>
+        <div class="menu-container">
+            <button id="hamburger-btn" class="hamburger" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <nav id="dropdown-menu" class="dropdown">
+                <ul class="dropdown-list">
+                    <li><a href="../index.html" style="color: var(--turquoise);">Retour à l'Index</a></li>
+                    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 5px 0;">
+                    
+                    <li><a href="#">Accueil</a></li>
+                    <li><a href="#">Règlement</a></li>
+                    <li><a href="#">Boutique</a></li>
+                    <li><a href="#">Nous Contacter</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
     <main class="content-wrapper">

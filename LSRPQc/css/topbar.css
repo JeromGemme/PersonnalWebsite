@@ -1,117 +1,133 @@
-/* --- TOP BAR STYLES --- */
 :root {
     --turquoise: #00CEB4;
-    --near-black: rgba(20, 20, 20, 0.8);
-    --solid-near-black: #141414;
+    --bg-dark: #000000;
+    --glass-bg: rgba(10, 10, 10, 0.8);
 }
 
-body {
+/* Global Dark Background Fix */
+html, body {
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* Using a solid color behind the rgba so it stays dark */
-    background-color: var(--solid-near-black); 
-    color: var(--turquoise);
+    background-color: #000000 !important; /* Forces absolute black */
+    color: #00CEB4; /* Default turquoise text */
+    min-height: 100vh;
+    width: 100%;
 }
 
-.top-bar {
+/* Barre de navigation */
+.futuristic-topbar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 70px;
-    background-color: var(--near-black);
-    
-    /* Borders and Rounded Corners */
-    border-bottom: 2px solid var(--turquoise);
-    border-left: 2px solid var(--turquoise);
-    border-right: 2px solid var(--turquoise);
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-    box-sizing: border-box;
-
-    /* Layout */
+    height: 65px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
+    padding: 0 30px;
+    box-sizing: border-box;
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(0, 206, 180, 0.3); /* Bordure Turquoise subtile */
     z-index: 1000;
-    
-    /* Animation for scroll hide/show */
-    transition: top 0.3s ease-in-out;
-    backdrop-filter: blur(5px);
+    transition: top 0.3s ease;
 }
 
-.top-bar .logo {
+.topbar-brand {
     color: var(--turquoise);
-    font-size: 28px;
-    font-weight: bold;
-    letter-spacing: 2px;
-    text-align: center;
-    flex-grow: 1;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-shadow: 0 0 10px rgba(0, 206, 180, 0.4);
 }
 
-.top-bar .spacer {
-    width: 50px; /* Balances the flex layout against the button */
-}
-
-.dropdown-btn {
-    background: none;
-    border: none;
-    color: var(--turquoise);
-    font-size: 24px;
-    cursor: pointer;
-    font-weight: bold;
+.menu-container {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 5px 10px;
 }
 
-.dropdown-btn:focus {
-    outline: none;
-}
-
-/* Dropdown Menu Styles */
-.dropdown-menu {
-    position: absolute;
-    top: 80px; /* Right below the top bar */
-    left: 20px;
-    background-color: var(--near-black);
-    border: 1px solid var(--turquoise);
-    border-radius: 10px;
-    width: 200px;
-    display: none; /* Hidden by default */
-    flex-direction: column;
-    box-shadow: 0px 8px 16px rgba(0, 206, 180, 0.2);
-}
-
-.dropdown-menu.show {
+/* Hamburger Turquoise */
+.hamburger {
+    background: none;
+    border: none;
+    cursor: pointer;
     display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
 }
 
-.dropdown-menu ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
-.dropdown-menu li {
-    border-bottom: 1px solid rgba(0, 206, 180, 0.3);
-}
-
-.dropdown-menu li:last-child {
-    border-bottom: none;
-}
-
-.dropdown-menu a {
+.hamburger span {
     display: block;
-    color: var(--turquoise);
-    text-decoration: none;
-    padding: 15px 20px;
-    transition: background 0.2s;
+    width: 28px;
+    height: 2px;
+    background-color: var(--turquoise);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 0 5px rgba(0, 206, 180, 0.5);
 }
 
-.dropdown-menu a:hover {
-    background-color: rgba(0, 206, 180, 0.1);
+/* Animation en X */
+.hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.hamburger.active span:nth-child(2) { opacity: 0; transform: translateX(10px); }
+.hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+/* Menu Dropdown Dark */
+.dropdown {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: rgba(5, 5, 5, 0.95);
+    border: 1px solid rgba(0, 206, 180, 0.2);
+    border-radius: 8px;
+    min-width: 220px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+}
+
+.dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-list {
+    list-style: none;
+    padding: 15px 0;
+    margin: 0;
+}
+
+.dropdown-list a {
+    display: block;
+    padding: 12px 25px;
+    color: #a0a0a0;
+    text-decoration: none;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: 0.3s;
+    position: relative;
+}
+
+.dropdown-list a:hover {
+    color: var(--turquoise);
+    background: rgba(0, 206, 180, 0.05);
+    padding-left: 30px;
+}
+
+/* Ligne d'accent turquoise sur le côté */
+.dropdown-list a:hover::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--turquoise);
 }

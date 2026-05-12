@@ -1,15 +1,26 @@
 /* --- MAIN PAGE STYLES --- */
 
+/* --- MAIN PAGE STYLES --- */
+
+:root {
+    --turquoise: #00CEB4;
+    --near-black: #0a0a0a;
+}
+
+body {
+    background-color: #000000; /* Absolute black */
+}
+
 .content-wrapper {
-    /* Push content down so it's not hidden behind the fixed topbar */
+    background-color: #000000; /* Ensure the wrapper is black */
     padding-top: 120px; 
     max-width: 900px;
     margin: 0 auto;
-    padding-bottom: 50px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 50px;
+    min-height: 100vh;
 }
 
 /* 2. Server Description */
