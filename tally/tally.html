@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Modern Tally Counter</title>
+    <link rel="stylesheet" href="css/tally.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Maximum Limit -->
+        <section class="panel">
+            <label class="section-title">MAXIMUM</label>
+            <div class="input-group">
+                <input type="number" id="max-limit" placeholder="Restart count at..." aria-label="Maximum count">
+            </div>
+        </section>
+
+        <!-- Auto-Increment Controls -->
+        <section class="panel">
+            <label class="section-title">AUTO-INCREMENT</label>
+            <div class="row">
+                <div class="input-col">
+                    <label>Amount (+)</label>
+                    <input type="number" id="auto-amount" value="1" step="any">
+                </div>
+                <div class="input-col">
+                    <label>Time Loop (Sec)</label>
+                    <input type="number" id="auto-time" value="1" step="0.001" placeholder="e.g. 4.055">
+                </div>
+            </div>
+            
+            <button id="btn-start" class="btn primary-btn">
+                <span class="spinner" id="spinner">
+                    <svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg>
+                </span>
+                <span id="start-text">Start the Auto-Loop</span>
+            </button>
+            <button id="btn-pause" class="btn secondary-btn" disabled>Pause the Auto-loop</button>
+            <button id="btn-restart" class="btn secondary-btn danger-hover">Restart Count</button>
+        </section>
+
+        <!-- Display -->
+        <section class="display-panel">
+            <label class="section-title">Actual Count</label>
+            <div class="counter-display" id="actual-count">0</div>
+            
+            <!-- Direct Edit Input -->
+            <div class="direct-edit-group">
+                <input type="number" id="direct-edit-input" placeholder="Set exact count..." step="any">
+                <button id="btn-apply-edit" class="btn-small">Apply</button>
+            </div>
+        </section>
+
+        <!-- Manual Controls -->
+        <section class="panel manual-controls">
+            <button id="btn-minus" class="btn square-btn">-</button>
+            <div class="input-col">
+                <label>Increment Amount</label>
+                <input type="number" id="manual-step" value="1" step="any">
+            </div>
+            <button id="btn-plus" class="btn square-btn">+</button>
+        </section>
+    </div>
+
+    <script src="js/tally.js"></script>
+</body>
+</html>

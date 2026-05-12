@@ -1,0 +1,103 @@
+/* --- MAIN PAGE STYLES --- */
+
+.content-wrapper {
+    /* Push content down so it's not hidden behind the fixed topbar */
+    padding-top: 120px; 
+    max-width: 900px;
+    margin: 0 auto;
+    padding-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+}
+
+/* 2. Server Description */
+.server-description {
+    background-color: var(--near-black);
+    border: 1px solid rgba(0, 206, 180, 0.2);
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    width: 90%;
+}
+
+.server-description p {
+    font-size: 18px;
+    line-height: 1.6;
+    margin: 0;
+    color: var(--turquoise);
+}
+
+/* 3. Discord Button */
+.discord-section {
+    display: flex;
+    justify-content: center;
+}
+
+.discord-btn {
+    display: flex;
+    align-items: center;
+    background-color: #5865F2; /* Official Discord Purple */
+    color: white;
+    text-decoration: none;
+    padding: 15px 30px;
+    border-radius: 30px; /* Round Cornered */
+    gap: 15px;
+    transition: transform 0.2s, background-color 0.2s;
+    box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
+}
+
+.discord-btn:hover {
+    background-color: #4752C4;
+    transform: translateY(-3px);
+}
+
+.discord-btn i {
+    font-size: 35px;
+}
+
+.discord-text {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.2;
+    text-align: left;
+}
+
+/* 4. Description List */
+.description-list {
+    background-color: var(--near-black);
+    border-radius: 15px;
+    padding: 30px 50px;
+    width: 80%;
+    border-left: 4px solid var(--turquoise);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.description-list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.description-list li {
+    font-size: 18px;
+    margin-bottom: 15px;
+    padding-left: 30px;
+    position: relative;
+    color: var(--turquoise);
+}
+
+.description-list li:last-child {
+    margin-bottom: 0;
+}
+
+/* Custom Turquoise Bullet Points */
+.description-list li::before {
+    content: '★';
+    position: absolute;
+    left: 0;
+    color: var(--turquoise);
+    font-size: 20px;
+}

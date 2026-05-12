@@ -1,0 +1,144 @@
+/* Base Reset & Journalistic Black Background */
+body, html {
+    margin: 0;
+    padding: 0;
+    background-color: #000000; /* Absolute black */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    height: 100%;
+}
+
+/* Futuristic Glassmorphic Topbar */
+.futuristic-topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 65px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+    box-sizing: border-box;
+    background: rgba(10, 10, 10, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 1000;
+}
+
+/* Journalistic Typography */
+.topbar-brand {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+}
+
+/* Menu Container */
+.menu-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Futuristic Hamburger Icon */
+.hamburger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
+    z-index: 1001;
+}
+
+.hamburger span {
+    display: block;
+    width: 30px;
+    height: 2px;
+    background-color: #ffffff;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3); /* Subtle futuristic glow */
+}
+
+/* Hamburger Active State (Transforms to an X) */
+.hamburger.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(10px);
+}
+.hamburger.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Dropdown Menu */
+.dropdown {
+    position: absolute;
+    top: 55px; /* Drops just below the bar */
+    right: 0;
+    background: rgba(15, 15, 15, 0.95);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    min-width: 220px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-15px);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9);
+}
+
+.dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-list {
+    list-style: none;
+    margin: 0;
+    padding: 10px 0;
+}
+
+.dropdown-list a {
+    display: block;
+    padding: 15px 25px;
+    color: #888888;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* Hover Effects */
+.dropdown-list a:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.03);
+    padding-left: 32px; /* Shifts text right slightly on hover */
+}
+
+/* Futuristic side-accent line on hover */
+.dropdown-list a::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background: #00CEB4; /* Modern turquoise accent */
+    transform: scaleY(0);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: bottom;
+}
+
+.dropdown-list a:hover::before {
+    transform: scaleY(1);
+    transform-origin: top;
+}
