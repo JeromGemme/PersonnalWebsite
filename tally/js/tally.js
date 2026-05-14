@@ -1,147 +1,153 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // State
+    // --- State Variables ---
     let count = 0;
     let autoInterval = null;
+    let timerAnimation = null;
+    let lastTickTime = 0;
     let isRunning = false;
     let isPaused = false;
 
-    // DOM Elements
+    // --- DOM Elements ---
     const countDisplay = document.getElementById('actual-count');
-    const maxLimitInput = document.getElementById('max-limit');
-    
-    // Auto Elements
-    const autoAmountInput = document.getElementById('auto-amount');
-    const autoTimeInput = document.getElementById('auto-time');
     const btnStart = document.getElementById('btn-start');
     const btnPause = document.getElementById('btn-pause');
-    const btnRestart = document.getElementById('btn-restart');
     const startText = document.getElementById('start-text');
+    const loopTimerDisplay = document.getElementById('loop-timer');
+    const autoAmountInput = document.getElementById('auto-amount');
+    const autoTimeInput = document.getElementById('auto-time');
 
-    // Direct Edit Elements
-    const directEditInput = document.getElementById('direct-edit-input');
-    const btnApplyEdit = document.getElementById('btn-apply-edit');
+    // Calculator Elements
+    const cSec = document.getElementById('calc-sec');
+    const cInch = document.getElementById('calc-inch');
+    const cSLen = document.getElementById('calc-sheet-len');
+    const cQty = document.getElementById('calc-qty');
+    const resSheet = document.getElementById('res-per-sheet');
+    const resTotal = document.getElementById('res-total');
 
-    // Manual Elements
-    const btnMinus = document.getElementById('btn-minus');
-    const btnPlus = document.getElementById('btn-plus');
-    const manualStepInput = document.getElementById('manual-step');
-
-    // Update Display Logic
+    // --- Core Updates ---
     function updateDisplay(newCount) {
-        const maxLimit = parseFloat(maxLimitInput.value);
-        
-        // Check if we hit the maximum limit
-        if (!isNaN(maxLimit) && newCount >= maxLimit) {
-            count = 0; // Restart count
-        } else {
-            count = newCount;
-        }
-
-        // Format to avoid long decimal trailing
+        count = newCount;
         countDisplay.textContent = Number.isInteger(count) ? count : parseFloat(count.toFixed(4));
     }
 
-    // Loop Engine
+    // --- Live Timer Engine ---
+    function updateTimerUI() {
+        if (!isRunning || isPaused) return;
+        const now = Date.now();
+        const elapsed = (now - lastTickTime) / 1000;
+        loopTimerDisplay.textContent = elapsed.toFixed(3) + 's';
+        timerAnimation = requestAnimationFrame(updateTimerUI);
+    }
+
     function triggerTick() {
         const amount = parseFloat(autoAmountInput.value) || 0;
         updateDisplay(count + amount);
+        lastTickTime = Date.now(); // Reset timer visually for the new loop
     }
 
     function startLoop() {
         const timeInSeconds = parseFloat(autoTimeInput.value);
         if (isNaN(timeInSeconds) || timeInSeconds <= 0) return;
-
-        const timeInMs = timeInSeconds * 1000;
-        autoInterval = setInterval(triggerTick, timeInMs);
+        
+        lastTickTime = Date.now();
+        autoInterval = setInterval(triggerTick, timeInSeconds * 1000);
+        updateTimerUI(); // Start the visual millisecond timer
     }
 
-    // Button Logic: Start / Stop
+    // --- Loop Buttons ---
     btnStart.addEventListener('click', () => {
         if (isRunning) {
-            // Stop the loop
             clearInterval(autoInterval);
+            cancelAnimationFrame(timerAnimation);
             isRunning = false;
             isPaused = false;
-            
             btnStart.classList.remove('running');
             startText.textContent = 'Start the Auto-Loop';
-            btnPause.textContent = 'Pause the Auto-loop';
             btnPause.disabled = true;
-            
-            // Re-enable inputs
             autoTimeInput.disabled = false;
         } else {
-            // Start the loop
             isRunning = true;
             isPaused = false;
-            startLoop();
-            
             btnStart.classList.add('running');
             startText.textContent = 'Stop the Auto-Loop';
-            btnPause.textContent = 'Pause the Auto-loop';
             btnPause.disabled = false;
-            
-            // Disable time input while running
-            autoTimeInput.disabled = true; 
+            btnPause.textContent = 'Pause the Auto-loop';
+            autoTimeInput.disabled = true;
+            startLoop();
         }
     });
 
-    // Button Logic: Pause / Unpause
     btnPause.addEventListener('click', () => {
         if (!isRunning) return;
-
+        
         if (isPaused) {
-            // Unpause
+            // Unpause: Restart the loop completely from 0
             isPaused = false;
             btnPause.textContent = 'Pause the Auto-loop';
-            btnStart.classList.add('running');
-            startText.textContent = 'Stop the Auto-Loop';
-            startLoop();
+            startLoop(); 
         } else {
-            // Pause
+            // Pause: Stop exactly where we are
             isPaused = true;
             clearInterval(autoInterval);
-            btnPause.textContent = 'UnPause the Auto-loop';
-            btnStart.classList.remove('running');
-            startText.textContent = 'Auto-Loop is Paused';
+            cancelAnimationFrame(timerAnimation);
+            btnPause.textContent = 'UnPause (Restart Loop)';
         }
     });
 
-    // Button Logic: Restart Current Count
-    btnRestart.addEventListener('click', () => {
-        if (confirm('Are you sure you want to reset the count to 0?')) {
-            updateDisplay(0);
-        }
+    // --- Manual & Direct Actions ---
+    document.getElementById('btn-minus').addEventListener('click', () => {
+        updateDisplay(count - (parseFloat(document.getElementById('manual-step').value) || 1));
+    });
+    
+    document.getElementById('btn-plus').addEventListener('click', () => {
+        updateDisplay(count + (parseFloat(document.getElementById('manual-step').value) || 1));
     });
 
-    // Logic: Direct Edit Apply
-    function applyDirectEdit() {
-        const newCount = parseFloat(directEditInput.value);
-        if (!isNaN(newCount)) {
-            if (confirm(`Are you sure you want to set the actual tally count to ${newCount}?`)) {
-                updateDisplay(newCount);
-                directEditInput.value = ''; // Clear input after successful apply
-            }
-        }
+    document.getElementById('btn-restart').addEventListener('click', () => {
+        if (confirm('Are you sure you want to reset the count to 0?')) updateDisplay(0);
+    });
+
+    document.getElementById('btn-apply-edit').addEventListener('click', () => {
+        const val = parseFloat(document.getElementById('direct-edit-input').value);
+        if (!isNaN(val) && confirm(`Set exact count to ${val}?`)) updateDisplay(val);
+    });
+
+    // --- Production Calculator Engine ---
+    function formatTime(totalSeconds) {
+        if (isNaN(totalSeconds) || !isFinite(totalSeconds)) return "00:00:00:000";
+        
+        const h = Math.floor(totalSeconds / 3600);
+        const m = Math.floor((totalSeconds % 3600) / 60);
+        const s = Math.floor(totalSeconds % 60);
+        const ms = Math.floor((totalSeconds % 1) * 1000);
+        
+        // Format: hh:mm:ss:msmsms
+        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}:${ms.toString().padStart(3, '0')}`;
     }
 
-    btnApplyEdit.addEventListener('click', applyDirectEdit);
-    
-    // Allow pressing "Enter" on the direct edit input
-    directEditInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            applyDirectEdit();
+    function runCalculation() {
+        const sec = parseFloat(cSec.value) || 0;
+        const inch = parseFloat(cInch.value) || 0;
+        const sLen = parseFloat(cSLen.value) || 0;
+        const qty = parseFloat(cQty.value) || 0;
+
+        if (inch <= 0) {
+            resSheet.textContent = "0.00s";
+            resTotal.textContent = "00:00:00:000";
+            return;
         }
-    });
 
-    // Button Logic: Manual - / +
-    btnMinus.addEventListener('click', () => {
-        const step = parseFloat(manualStepInput.value) || 1;
-        updateDisplay(count - step);
-    });
+        // Logic: (Sec / Inch) * SheetLen = Time per sheet
+        const timePerSheet = (sec / inch) * sLen;
+        // Logic: Time per sheet * Qty = Total Time
+        const totalTime = timePerSheet * qty;
 
-    btnPlus.addEventListener('click', () => {
-        const step = parseFloat(manualStepInput.value) || 1;
-        updateDisplay(count + step);
+        resSheet.textContent = timePerSheet.toFixed(2) + "s";
+        resTotal.textContent = formatTime(totalTime);
+    }
+
+    // Attach event listeners to calculator inputs
+    [cSec, cInch, cSLen, cQty].forEach(input => {
+        input.addEventListener('input', runCalculation);
     });
 });
