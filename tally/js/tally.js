@@ -4,15 +4,22 @@ document.addEventListener('DOMContentLoaded', () => {
     let autoInterval = null;
     let timerAnimation = null;
     let lastTickTime = 0;
+    let accumulatedTimeMs = 0; // Total time of fully COMPLETED loops
     let isRunning = false;
     let isPaused = false;
 
     // --- DOM Elements ---
     const countDisplay = document.getElementById('actual-count');
+    const maxLimitInput = document.getElementById('max-limit');
     const btnStart = document.getElementById('btn-start');
     const btnPause = document.getElementById('btn-pause');
     const startText = document.getElementById('start-text');
+    
+    // Timers
     const loopTimerDisplay = document.getElementById('loop-timer');
+    const globalChronoDisplay = document.getElementById('global-chrono');
+    
+    // Inputs
     const autoAmountInput = document.getElementById('auto-amount');
     const autoTimeInput = document.getElementById('auto-time');
 
@@ -24,25 +31,76 @@ document.addEventListener('DOMContentLoaded', () => {
     const resSheet = document.getElementById('res-per-sheet');
     const resTotal = document.getElementById('res-total');
 
-    // --- Core Updates ---
+    // --- Core Updates & Max Limit Stop Logic ---
     function updateDisplay(newCount) {
-        count = newCount;
+        const maxLimit = parseFloat(maxLimitInput.value);
+        let hitLimit = false;
+
+        // If a Maximum Limit is set and we hit it
+        if (!isNaN(maxLimit) && newCount >= maxLimit) {
+            count = maxLimit; 
+            hitLimit = true;
+        } else {
+            count = newCount;
+        }
+
         countDisplay.textContent = Number.isInteger(count) ? count : parseFloat(count.toFixed(4));
+
+        // Auto Stop EVERYTHING if limit is reached
+        if (hitLimit && isRunning) {
+            clearInterval(autoInterval);
+            cancelAnimationFrame(timerAnimation);
+            isRunning = false;
+            isPaused = false;
+            
+            btnStart.classList.remove('running');
+            startText.textContent = 'Start the Auto-Loop';
+            btnPause.disabled = true;
+            autoTimeInput.disabled = false;
+            
+            // Lock the global chrono to the final exact completed time
+            globalChronoDisplay.textContent = formatTimeMs(accumulatedTimeMs);
+            loopTimerDisplay.textContent = "0.000s";
+            
+            setTimeout(() => alert(`Target Reached! Total Loop Time: ${formatTimeMs(accumulatedTimeMs)}`), 100);
+        }
+    }
+
+    // --- Formatting Tools ---
+    function formatTimeMs(totalMs) {
+        if (isNaN(totalMs) || !isFinite(totalMs)) return "00:00:00:000";
+        const h = Math.floor(totalMs / 3600000);
+        const m = Math.floor((totalMs % 3600000) / 60000);
+        const s = Math.floor((totalMs % 60000) / 1000);
+        const ms = Math.floor(totalMs % 1000);
+        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}:${ms.toString().padStart(3, '0')}`;
     }
 
     // --- Live Timer Engine ---
     function updateTimerUI() {
         if (!isRunning || isPaused) return;
         const now = Date.now();
-        const elapsed = (now - lastTickTime) / 1000;
-        loopTimerDisplay.textContent = elapsed.toFixed(3) + 's';
+        const elapsedSinceTick = now - lastTickTime;
+        
+        // Update small button timer
+        loopTimerDisplay.textContent = (elapsedSinceTick / 1000).toFixed(3) + 's';
+        
+        // Update global chrono (Accumulated completed loops + Current ongoing loop)
+        const currentTotalMs = accumulatedTimeMs + elapsedSinceTick;
+        globalChronoDisplay.textContent = formatTimeMs(currentTotalMs);
+        
         timerAnimation = requestAnimationFrame(updateTimerUI);
     }
 
     function triggerTick() {
         const amount = parseFloat(autoAmountInput.value) || 0;
+        const timeInSeconds = parseFloat(autoTimeInput.value) || 0;
+        
+        // Add exact config time to accumulation to avoid millisecond drift
+        accumulatedTimeMs += (timeInSeconds * 1000);
+        lastTickTime = Date.now(); 
+        
         updateDisplay(count + amount);
-        lastTickTime = Date.now(); // Reset timer visually for the new loop
     }
 
     function startLoop() {
@@ -51,12 +109,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         lastTickTime = Date.now();
         autoInterval = setInterval(triggerTick, timeInSeconds * 1000);
-        updateTimerUI(); // Start the visual millisecond timer
+        updateTimerUI();
     }
 
     // --- Loop Buttons ---
     btnStart.addEventListener('click', () => {
         if (isRunning) {
+            // STOP Manually
             clearInterval(autoInterval);
             cancelAnimationFrame(timerAnimation);
             isRunning = false;
@@ -65,7 +124,15 @@ document.addEventListener('DOMContentLoaded', () => {
             startText.textContent = 'Start the Auto-Loop';
             btnPause.disabled = true;
             autoTimeInput.disabled = false;
+            
+            // Discard the unfinished loop time and lock the display
+            globalChronoDisplay.textContent = formatTimeMs(accumulatedTimeMs);
+            loopTimerDisplay.textContent = "0.000s";
         } else {
+            // START (Fresh)
+            accumulatedTimeMs = 0; 
+            globalChronoDisplay.textContent = formatTimeMs(0);
+            
             isRunning = true;
             isPaused = false;
             btnStart.classList.add('running');
@@ -81,16 +148,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isRunning) return;
         
         if (isPaused) {
-            // Unpause: Restart the loop completely from 0
+            // UNPAUSE: Restart the loop completely
             isPaused = false;
             btnPause.textContent = 'Pause the Auto-loop';
             startLoop(); 
         } else {
-            // Pause: Stop exactly where we are
+            // PAUSE: Stop exactly where we are
             isPaused = true;
             clearInterval(autoInterval);
             cancelAnimationFrame(timerAnimation);
             btnPause.textContent = 'UnPause (Restart Loop)';
+            
+            // CRITICAL: Force global chrono to revert to accumulated time (discarding unfinished loop)
+            globalChronoDisplay.textContent = formatTimeMs(accumulatedTimeMs);
         }
     });
 
@@ -104,7 +174,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('btn-restart').addEventListener('click', () => {
-        if (confirm('Are you sure you want to reset the count to 0?')) updateDisplay(0);
+        if (confirm('Are you sure you want to reset the count to 0?')) {
+            updateDisplay(0);
+            accumulatedTimeMs = 0;
+            if (!isRunning) globalChronoDisplay.textContent = formatTimeMs(0);
+        }
     });
 
     document.getElementById('btn-apply-edit').addEventListener('click', () => {
@@ -113,18 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Production Calculator Engine ---
-    function formatTime(totalSeconds) {
-        if (isNaN(totalSeconds) || !isFinite(totalSeconds)) return "00:00:00:000";
-        
-        const h = Math.floor(totalSeconds / 3600);
-        const m = Math.floor((totalSeconds % 3600) / 60);
-        const s = Math.floor(totalSeconds % 60);
-        const ms = Math.floor((totalSeconds % 1) * 1000);
-        
-        // Format: hh:mm:ss:msmsms
-        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}:${ms.toString().padStart(3, '0')}`;
-    }
-
     function runCalculation() {
         const sec = parseFloat(cSec.value) || 0;
         const inch = parseFloat(cInch.value) || 0;
@@ -137,13 +199,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Logic: (Sec / Inch) * SheetLen = Time per sheet
         const timePerSheet = (sec / inch) * sLen;
-        // Logic: Time per sheet * Qty = Total Time
         const totalTime = timePerSheet * qty;
 
         resSheet.textContent = timePerSheet.toFixed(2) + "s";
-        resTotal.textContent = formatTime(totalTime);
+        resTotal.textContent = formatTimeMs(totalTime * 1000); // Reusing the global format tool!
     }
 
     // Attach event listeners to calculator inputs
