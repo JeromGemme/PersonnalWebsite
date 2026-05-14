@@ -285,3 +285,30 @@ input[type="number"]:focus {
     font-size: 1.1rem;
     letter-spacing: 1px;
 }
+
+/* Global Chrono Display */
+.chrono-container {
+    margin: 15px auto 20px auto;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 206, 180, 0.2);
+    display: inline-block;
+}
+
+.chrono-container label {
+    color: var(--turquoise);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+}
+
+.global-chrono {
+    font-family: monospace;
+    font-size: 1.4rem;
+    color: var(--text-main);
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
