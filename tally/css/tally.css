@@ -233,3 +233,55 @@ input[type="number"]:focus {
 .app-container {
     margin-top: 80px; 
 }
+
+/* Live Timer inside Start Button */
+.timer-text {
+    font-family: monospace;
+    font-size: 1.1rem;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 3px 10px;
+    border-radius: 6px;
+    min-width: 75px;
+    text-align: center;
+    display: none; /* Hidden by default */
+}
+
+.running .timer-text {
+    display: inline-block;
+}
+
+/* Calculator Section */
+.calculator-panel {
+    border: 1px solid rgba(0, 206, 180, 0.2);
+    margin-top: 10px;
+}
+
+.calc-results {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.result-box {
+    flex: 1;
+    text-align: center;
+}
+
+.res-val {
+    color: var(--turquoise);
+    font-weight: 700;
+    font-size: 1.2rem;
+    font-family: monospace;
+    margin-top: 5px;
+    background: #111;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #222;
+}
+
+#res-total {
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
