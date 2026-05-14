@@ -26,9 +26,22 @@
     </header>
 
     <div class="app-container">
+        <section class="panel">
+            <label class="section-title">MAXIMUM</label>
+            <div class="input-group">
+                <input type="number" id="max-limit" placeholder="Stop count at..." aria-label="Maximum count">
+            </div>
+        </section>
+
         <section class="display-panel">
             <label class="section-title">Actual Count</label>
             <div class="counter-display" id="actual-count">0</div>
+            
+            <div class="chrono-container">
+                <label>Total Loop Time</label>
+                <div id="global-chrono" class="global-chrono">00:00:00:000</div>
+            </div>
+
             <div class="direct-edit-group">
                 <input type="number" id="direct-edit-input" placeholder="Set exact count..." step="any">
                 <button id="btn-apply-edit" class="btn-small">Apply</button>
