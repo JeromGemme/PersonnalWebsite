@@ -11,14 +11,10 @@
     
     <header class="futuristic-topbar tally-theme">
         <a href="../index.html" class="topbar-brand">TALLY.</a>
-    
         <div class="menu-container">
             <button id="hamburger-btn" class="hamburger" aria-label="Menu">
-                <span></span>
-                <span></span>
-                <span></span>
+                <span></span><span></span><span></span>
             </button>
-        
             <nav id="dropdown-menu" class="dropdown">
                 <ul class="dropdown-list">
                     <li><a href="../index.html">Home</a></li>
@@ -30,15 +26,15 @@
     </header>
 
     <div class="app-container">
-        <!-- Maximum Limit -->
-        <section class="panel">
-            <label class="section-title">MAXIMUM</label>
-            <div class="input-group">
-                <input type="number" id="max-limit" placeholder="Restart count at..." aria-label="Maximum count">
+        <section class="display-panel">
+            <label class="section-title">Actual Count</label>
+            <div class="counter-display" id="actual-count">0</div>
+            <div class="direct-edit-group">
+                <input type="number" id="direct-edit-input" placeholder="Set exact count..." step="any">
+                <button id="btn-apply-edit" class="btn-small">Apply</button>
             </div>
         </section>
 
-        <!-- Auto-Increment Controls -->
         <section class="panel">
             <label class="section-title">AUTO-INCREMENT</label>
             <div class="row">
@@ -48,33 +44,18 @@
                 </div>
                 <div class="input-col">
                     <label>Time Loop (Sec)</label>
-                    <input type="number" id="auto-time" value="1" step="0.001" placeholder="e.g. 4.055">
+                    <input type="number" id="auto-time" value="1" step="0.001">
                 </div>
             </div>
             
             <button id="btn-start" class="btn primary-btn">
-                <span class="spinner" id="spinner">
-                    <svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg>
-                </span>
+                <span id="loop-timer" class="timer-text">0.000s</span>
                 <span id="start-text">Start the Auto-Loop</span>
             </button>
             <button id="btn-pause" class="btn secondary-btn" disabled>Pause the Auto-loop</button>
             <button id="btn-restart" class="btn secondary-btn danger-hover">Restart Count</button>
         </section>
 
-        <!-- Display -->
-        <section class="display-panel">
-            <label class="section-title">Actual Count</label>
-            <div class="counter-display" id="actual-count">0</div>
-            
-            <!-- Direct Edit Input -->
-            <div class="direct-edit-group">
-                <input type="number" id="direct-edit-input" placeholder="Set exact count..." step="any">
-                <button id="btn-apply-edit" class="btn-small">Apply</button>
-            </div>
-        </section>
-
-        <!-- Manual Controls -->
         <section class="panel manual-controls">
             <button id="btn-minus" class="btn square-btn">-</button>
             <div class="input-col">
@@ -82,6 +63,40 @@
                 <input type="number" id="manual-step" value="1" step="any">
             </div>
             <button id="btn-plus" class="btn square-btn">+</button>
+        </section>
+
+        <section class="panel calculator-panel">
+            <label class="section-title">Production Calculator</label>
+            <div class="row">
+                <div class="input-col">
+                    <label>Input Sec</label>
+                    <input type="number" id="calc-sec" placeholder="Seconds" step="any">
+                </div>
+                <div class="input-col">
+                    <label>per Inch</label>
+                    <input type="number" id="calc-inch" placeholder="Inches" step="any">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-col">
+                    <label>Sheets Inch</label>
+                    <input type="number" id="calc-sheet-len" placeholder="Length" step="any">
+                </div>
+                <div class="input-col">
+                    <label>Sheets Qty</label>
+                    <input type="number" id="calc-qty" placeholder="Quantity" step="any">
+                </div>
+            </div>
+            <div class="calc-results">
+                <div class="result-box">
+                    <label>Time per full sheet</label>
+                    <div id="res-per-sheet" class="res-val">0.00s</div>
+                </div>
+                <div class="result-box">
+                    <label>Total Estimate</label>
+                    <div id="res-total" class="res-val">00:00:00:000</div>
+                </div>
+            </div>
         </section>
     </div>
 
